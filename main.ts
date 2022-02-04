@@ -9,6 +9,7 @@ function bridgeDown() {
     zavora2.stop()
     most.stop()
     running = true
+    strip.showColor(neopixel.colors(NeoPixelColors.Green))
 }
 function bridgeUp() {
     running = false
@@ -21,6 +22,7 @@ function bridgeUp() {
     zavora2.stop()
     most.stop()
     running = true
+    strip.showColor(neopixel.colors(NeoPixelColors.Red))
 }
 
 function bridgeOff() {
@@ -33,6 +35,7 @@ function bridgeOff() {
     zavora2.stop()
     most.stop()
     basic.showIcon(IconNames.Asleep)
+    strip.showColor(neopixel.colors(NeoPixelColors.Black))
 }
 
 function bridgeReset() {
@@ -45,6 +48,7 @@ function bridgeReset() {
     zavora2.stop()
     most.stop()
     running = true
+    strip.showColor(neopixel.colors(NeoPixelColors.Black))
 }
 
 input.onButtonPressed(Button.AB, function () {
@@ -61,19 +65,21 @@ input.onButtonPressed(Button.A, function () {
     }
 })
 
-music.setVolume(16)
+music.setVolume(255)
 radio.setGroup(111)
 
 /* safe pin: P0, P1, P2, P8, P9, P12, P16 */
-pins.setPull(DigitalPin.P12, PinPullMode.PullUp)
-pins.setPull(DigitalPin.P13, PinPullMode.PullUp)
-pins.setPull(DigitalPin.P14, PinPullMode.PullUp)
-pins.setPull(DigitalPin.P15, PinPullMode.PullUp)
+//pins.setPull(DigitalPin.P12, PinPullMode.PullUp)
+//pins.setPull(DigitalPin.P13, PinPullMode.PullUp)
+//pins.setPull(DigitalPin.P14, PinPullMode.PullUp)
+//pins.setPull(DigitalPin.P15, PinPullMode.PullUp)
 basic.showIcon(IconNames.Sword)
 let running = false
 let zavora2 = new BridgeServo(PCAservo.Servos.S3, 1100, 2100, 2100, 8)
 let zavora1 = new BridgeServo(PCAservo.Servos.S2, 1100, 2050, 1950, 8)
 let most = new BridgeServo(PCAservo.Servos.S1, 1150, 1670, 1630, 2)
+let strip: neopixel.Strip = neopixel.create(DigitalPin.P16, 4, NeoPixelMode.RGB)
+strip.showColor(neopixel.colors(NeoPixelColors.Black))
 
 while (!input.logoIsPressed()) {
     basic.pause(125)
@@ -94,7 +100,7 @@ basic.forever(function () {
     //         bridgeUp()
     //     }
     // }
-    basic.pause(100)
+    //basic.pause(100)
 })
 
 radio.onReceivedValue(function (name: string, value: number) {
@@ -108,13 +114,13 @@ radio.onReceivedValue(function (name: string, value: number) {
         } else
         if (value == KEY.A) {
             if (running && !most.isDown()) {
-                console.log("bridge down")
+                //console.log("bridge down")
                 bridgeDown()
             }
         } else
         if (value == KEY.B) {
             if (running && most.isDown()) {
-                console.log("bridge up")
+                //console.log("bridge up")
                 bridgeUp()
             }
         } else
@@ -122,11 +128,13 @@ radio.onReceivedValue(function (name: string, value: number) {
             basic.showArrow(1, 0)
             zavora1.changePulse(-75, 0)
             zavora2.changePulse(-75, 0)
+            strip.showColor(neopixel.colors(NeoPixelColors.Black))
         } else
         if (value == KEY.C) {
             basic.showArrow(5, 0)
             zavora1.changePulse(75, 0)
             zavora2.changePulse(75, 0)
+            strip.showColor(neopixel.colors(NeoPixelColors.Black))
         }
     }
 
@@ -134,6 +142,7 @@ radio.onReceivedValue(function (name: string, value: number) {
         if (value == DIR.D) {
             basic.showArrow(4, 0)
             most.changePulse(50)
+            strip.showColor(neopixel.colors(NeoPixelColors.Black))
         }
         if (value == DIR.NONE) {
 
@@ -141,6 +150,7 @@ radio.onReceivedValue(function (name: string, value: number) {
         else if (value == DIR.U) {
             basic.showArrow(0, 0)
             most.changePulse(-50)
+            strip.showColor(neopixel.colors(NeoPixelColors.Black))
         }
     }
 })
