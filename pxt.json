@@ -5,12 +5,14 @@
     "dependencies": {
         "core": "*",
         "radio": "*",
-        "microphone": "*"
+        "microphone": "*",
+        "pxt-magicbit-pca9685-pwmservo": "github:tomaskazda/pxt-magicbit-pca9685-pwmservo#6e59cec4498461b58f03b0902ed3fd3f1bdd2a26"
     },
     "files": [
         "README.md",
-        "main.blocks",
-        "main.ts"
+        "main.ts",
+        "semaphor.ts",
+        "bridgeservo.ts"
     ],
     "testFiles": [
         "test.ts"
@@ -23,5 +25,5 @@
     "supportedTargets": [
         "microbit"
     ],
-    "preferredEditor": "blocksprj"
+    "preferredEditor": "tsprj"
 }
