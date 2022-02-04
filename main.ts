@@ -23,29 +23,46 @@ function bridgeUp() {
     running = true
 }
 
-input.onButtonPressed(Button.AB, function () {
+function bridgeOff() {
     running = false
     if (!most.isDown()) most.down()
     zavora1.down()
     zavora2.down()
-    basic.pause(2000)
+    basic.pause(500)
     zavora1.stop()
     zavora2.stop()
     most.stop()
     basic.showIcon(IconNames.Asleep)
+}
+
+function bridgeReset() {
+    most.down()
+    zavora1.up()
+    zavora2.up()
+    basic.showIcon(IconNames.Happy)
+    basic.pause(500)
+    zavora1.stop()
+    zavora2.stop()
+    most.stop()
+    running = true
+}
+
+input.onButtonPressed(Button.AB, function () {
+    bridgeOff()
 })
-input.onButtonPressed(Button.A, function () {
+input.onButtonPressed(Button.B, function () {
     if (running && most.isDown()) {
         bridgeUp()
     }
 })
-input.onButtonPressed(Button.B, function () {
+input.onButtonPressed(Button.A, function () {
     if (running && !most.isDown()) {
         bridgeDown()
     }
 })
 
 music.setVolume(16)
+radio.setGroup(111)
 
 /* safe pin: P0, P1, P2, P8, P9, P12, P16 */
 pins.setPull(DigitalPin.P12, PinPullMode.PullUp)
@@ -61,15 +78,7 @@ let most = new BridgeServo(PCAservo.Servos.S1, 1150, 1670, 1630, 2)
 while (!input.logoIsPressed()) {
     basic.pause(125)
 }
-most.down()
-zavora1.up()
-zavora2.up()
-basic.showIcon(IconNames.Happy)
-basic.pause(1000)
-zavora1.stop()
-zavora2.stop()
-most.stop()
-running = true
+bridgeReset()
 
 basic.forever(function () {
     // if (running) {
@@ -87,3 +96,73 @@ basic.forever(function () {
     // }
     basic.pause(100)
 })
+
+radio.onReceivedValue(function (name: string, value: number) {
+
+    if (name == "btn") {
+        if (value == KEY.E) {
+            bridgeReset()
+        } else
+        if (value == KEY.F) {
+            bridgeOff()
+        } else
+        if (value == KEY.A) {
+            if (running && !most.isDown()) {
+                console.log("bridge down")
+                bridgeDown()
+            }
+        } else
+        if (value == KEY.B) {
+            if (running && most.isDown()) {
+                console.log("bridge up")
+                bridgeUp()
+            }
+        } else
+        if (value == KEY.D) {
+            basic.showArrow(1, 0)
+            zavora1.changePulse(-75, 0)
+            zavora2.changePulse(-75, 0)
+        } else
+        if (value == KEY.C) {
+            basic.showArrow(5, 0)
+            zavora1.changePulse(75, 0)
+            zavora2.changePulse(75, 0)
+        }
+    }
+
+    if (name = "dir") {
+        if (value == DIR.D) {
+            basic.showArrow(4, 0)
+            most.changePulse(50)
+        }
+        if (value == DIR.NONE) {
+
+        }
+        else if (value == DIR.U) {
+            basic.showArrow(0, 0)
+            most.changePulse(-50)
+        }
+    }
+})
+
+enum DIR {
+    NONE = 10,
+    U = 11,
+    D = 12,
+    L = 13,
+    R = 14,
+    U_L = 15,
+    U_R = 16,
+    D_L = 17,
+    D_R = 18
+}
+
+enum KEY {
+    P = 0,
+    A = 1,
+    B = 2,
+    C = 3,
+    D = 4,
+    E = 5,
+    F = 6,
+}
